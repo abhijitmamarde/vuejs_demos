@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VueJs Tutorial - coligo</title>
+  </head>
+  <body>
+
+  <div id="vue-instance">
+
+  <p> Todo items: </p>
+  <ul>
+  <li v-for="todo in todos" @click="editTodo(todo)">{{todo.title}}</li>
+  </ul>
+
+  <p>
+  New Task: <input type="text" v-model="newTodo">
+  <div v-if="isActionAdd">
+  <button @click="addNewTodo">Add</button>
+  <button @click="doClear">Clear</button>
+  </div>
+  <div v-else="isActionAdd">
+  <button @click="saveEdited">Save</button>
+  <button @click="cancelEdit">Cancel</button>
+  <button @click="deleteSelected">Delete</button>
+  </div>
+  </p>
+
+    <hr>
+    <pre>vuejs data:
+{{ $data }}
+    </pre>
+  </div>
+
+  <script src="/js/vue.js"></script>
+
+  <script>
+    // our VueJs instance bound to the div with an id of vue-instance
+    var vm = new Vue({
+      el: '#vue-instance',
+      data: {
+        newTodo: '',
+        isActionAdd: true,
+        selectedTodo: null,
+        todos: [
+        {
+            id: 1,
+            title: "Learn JS"
+        },
+        {
+            id: 2,
+            title: "Learn VueJS"
+        },
+        ]
+      },
+      methods: {
+        addNewTodo() {
+            this.todos.push({id: null, title: this.newTodo});
+            this.newTodo = '';
+        },
+        doClear() {
+            this.newTodo = '';
+            this.isActionAdd = true;
+        },
+        editTodo(todo) {
+            this.selectedTodo = todo;
+            this.newTodo = this.selectedTodo.title;
+            this.isActionAdd = false;
+        },
+        saveEdited() {
+            // console.log("saveEdited - yet to be implemented!");
+            this.selectedTodo.title = this.newTodo;
+            this.newTodo = '';
+            this.isActionAdd = true;
+        },
+        cancelEdit() {
+          this.newTodo = '';
+          this.isActionAdd = true;
+        },
+        deleteSelected() {
+            // this.todos.remove(this.selectedTodo);
+            var index = this.todos.indexOf(this.selectedTodo);
+            if(index != -1)
+                this.todos.splice( index, 1 );
+            this.newTodo = '';
+            this.isActionAdd = true;
+        }
+      }
+    });
+  </script>
+
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VueJs Tutorial - coligo</title>
+  </head>
+  <body>
+
+  <small>
+  code taken from:
+  https://coligo.io/vuejs-the-basics/
+  </small>
+
+  <div id="vue-instance">
+    <p>
+      Enter your name: 
+      <input type="text" v-model="name">
+    </p>
+    <p>
+      Enter your password: 
+      <input type="password" v-model="password">
+    </p>
+    
+    <p>
+      <button v-on:click="setName('')">Clear</button>
+      <button @click="setName('Guest')">Default</button>
+      <button @click="doLogin">Login</button>
+    </p>
+
+    <p>Hello {{name}}</p>
+
+    <p v-if="isLogged">
+    Woow, you are logged into system now!
+    </p>
+
+    <hr>
+    <pre>vuejs data:
+{{ $data }}
+    </pre>
+  </div>
+
+  <script src="/js/vue.js"></script>
+
+  <script>
+    // our VueJs instance bound to the div with an id of vue-instance
+    var vm = new Vue({
+      el: '#vue-instance',
+      data: {
+        name: "Guest",
+        password: "",
+        isLogged: false
+      },
+      methods: {
+        setName(newName) {
+          this.name = newName;
+          this.password = "";
+          this.isLogged = false;
+        },
+        doLogin() {
+          if (this.name == "abhi" && this.password == "test") {
+            this.isLogged = true;
+          }
+        }
+      }
+    });
+  </script>
+
+  </body>
+</html>

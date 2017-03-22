@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VueJs Tutorial - coligo</title>
+  </head>
+  <body>
+
+  <div id="vue-instance">
+
+    <p>
+    <input type="text" v-model="first_name">
+    <input type="text" v-model="last_name">
+    </p>
+
+    <p> first_name: {{first_name}} </p>
+    <p> last_name: {{last_name}} </p>
+    <p> full_name: {{full_name}} </p>
+
+    <hr>
+    <pre>vuejs data: {{ $data }}
+    </pre>
+  </div>
+
+  <script src="/js/vue.js"></script>
+
+  <script>
+    // our VueJs instance bound to the div with an id of vue-instance
+    var vm = new Vue({
+      el: '#vue-instance',
+      data: {
+        first_name: "Abhijit",
+        last_name: "Mamarde",
+      },
+      methods: {
+      },
+      computed: {
+        full_name() {
+          return this.first_name + " " + this.last_name;
+        }
+      }
+    });
+  </script>
+
+  </body>
+</html>
