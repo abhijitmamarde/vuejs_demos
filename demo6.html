@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VueJs Tutorial - coligo</title>
+  </head>
+  <body>
+
+  <div id="vue-instance">
+
+    <input type="text" 
+        v-model="message"
+        v-on:keydown.up.stop.prevent="entered('up')" 
+        v-on:keydown.down.stop.prevent="entered('down')"
+        v-on:keydown.left.stop.prevent="entered('left')"
+        v-on:keydown.right.stop.prevent="entered('right')"
+        >
+
+    <hr>
+    <pre>vuejs data: {{ $data }}
+    </pre>
+  </div>
+
+  <script src="/js/vue.js"></script>
+
+  <script>
+    // our VueJs instance bound to the div with an id of vue-instance
+    var vm = new Vue({
+      el: '#vue-instance',
+      data: {
+          message: ""
+      },
+      methods: {
+          entered(direction) {
+              this.message = direction
+              console.log(direction)
+          }
+      },
+    });
+  </script>
+
+  </body>
+</html>
