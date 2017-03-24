@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VueJs Tutorial - coligo</title>
+  </head>
+  <body>
+
+  <div id="vue-instance">
+
+    <p>{{ total }}</p>
+    <button-counter @increment="incrementTotal"></button-counter>
+    <button-counter @increment="incrementTotal"></button-counter>    
+    
+
+    <hr>
+    <pre>vuejs data: {{ $data }}
+    </pre>
+  </div>
+
+  <script src="/js/vue.js"></script>
+
+  <script>
+
+    Vue.component('button-counter', {
+    template: '<button @click="increment">{{ counter }}</button>',
+    data: function () {
+        return {
+            counter: 0
+        }
+    },
+    methods: {
+        increment: function () {
+        this.counter += 1
+        this.$emit('increment(this.counter)')
+        }
+    },
+    });
+
+    var vm = new Vue({
+      el: '#vue-instance',
+      data: {
+        total: 0
+      },
+      methods: {
+        incrementTotal: function () {
+            this.total += 1
+        }
+      },
+    });
+  </script>
+
+  </body>
+</html>
