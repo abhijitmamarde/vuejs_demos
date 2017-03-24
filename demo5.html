@@ -9,7 +9,9 @@
 
     <p>{{ total }}</p>
     <button-counter @increment="incrementTotal"></button-counter>
-    <button-counter @increment="incrementTotal"></button-counter>    
+    <button-counter @increment="incrementTotal"></button-counter>
+    <button-counter @increment="incrementTotal"></button-counter>
+    <button-counter @increment="incrementTotal"></button-counter>
     
 
     <hr>
@@ -31,7 +33,7 @@
     methods: {
         increment: function () {
         this.counter += 1
-        this.$emit('increment(this.counter)')
+        this.$emit('increment')
         }
     },
     });
