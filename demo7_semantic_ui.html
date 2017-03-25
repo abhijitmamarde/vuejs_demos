@@ -10,15 +10,16 @@
 
 <div class="ui container">
 <div class="ui cards">
-    <friend-card cid="101" name="Abhijit Mamarde" description="Software Profferssional and Technology Enthusiast"> </friend-card>
-    <friend-card cid="102" name="Abhishek Gujrathi" description="Enterprneur, Stock Trader, Expert in E-Commerce"> </friend-card>
+
+    <friend-card v-for="friend in friends_suggested" 
+    :key="friend.cid"
+    :cid="friend.cid" 
+    :name="friend.name" 
+    :description="friend.description" 
+    @friendadded="onFriendAddition" />
+
 </div>
 </div>
-
-
-    <button class="ui button primary" @click="notImplementedYet('Sample Semantic-UI button')">
-        Sample Semantic-UI button
-    </button>
 
     <hr>
     <pre>vuejs data: {{ $data }}
@@ -57,18 +58,56 @@
             addFriend(){
                 console.log("adding friend:" + this.cid)
                 this.isAddPending = false
+                this.$emit("friendadded", this.cid)
             }
         }
 
     });
 
+
     var vm = new Vue({
       el: '#vue-instance',
       data: {
+          friends_suggested: [
+              {
+                  cid: "101",
+                  name: "Abhijit Mamarde",
+                  description: "Software Proffessional and Technology Enthusiast",
+                  added: false,
+                  added_at: null
+              },
+              {
+                  cid: "102",
+                  name: "Abhishek Gujrathi",
+                  description: "Enterprneur, Stock Trader, Expert in E-Commerce",
+                  added: false,
+                  added_at: null
+              },
+              {
+                  cid: "103",
+                  name: "Kate Winslet",
+                  description: "Actress, Hollywood Diva",
+                  added: false,
+                  added_at: null
+              },
+              {
+                  cid: "104",
+                  name: "John Doe",
+                  description: "Proffessional, fictional name most popular for web demos",
+                  added: false,
+                  added_at: null
+              },
+          ]
       },
       methods: {
           notImplementedYet(context) {
               console.log("Not yet implemented!" + context)
+          },
+          onFriendAddition(cid) {
+              friendadded = $.grep(this.friends_suggested, function(e){ return e.cid == cid; });
+              friendadded[0].added = true
+              friendadded[0].added_at = new Date()
+              console.log("friend successfully added:" + friendadded[0].name)
           }
       },
     });
