@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VueJs Tutorial - Infinite scrolling</title>
+  </head>
+  <body>
+
+  <div id="vue-instance">
+    <pre>
+    Total items: {{ list.length }}
+    </pre>
+    <hr>
+
+    <button @click="reset_loading">Reset</button>
+    <p v-for="item in list">
+      Line:
+      <span v-text="item"></span>
+    </p>
+    <infinite-loading :on-infinite="fetch_more_items" 
+      ref="infiniteLoading" 
+      spinner="waveDots"
+      >
+        <span slot="no-more">No older posts available!</span>
+        <!-- <span slot="spinner">loading...</span> -->
+    </infinite-loading>
+
+
+  </div>
+
+  <script src="/js/vue.js"></script>
+  <script src="/js/vue-infinite-loading.js"></script>
+
+  <script>
+    // our VueJs instance bound to the div with an id of vue-instance
+    var vm = new Vue({
+      el: '#vue-instance',
+      data: {
+        list: [],
+        max_count: 100
+      },
+      methods: {
+        fetch_more_items() {
+          if(this.list.length < this.max_count) {
+            setTimeout(() => {
+                const temp = [];
+                for (let i = this.list.length + 1; i <= this.list.length + 20; i++) {
+                  temp.push(i);
+                }
+                this.list = this.list.concat(temp);
+                this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
+            }, 1000);
+          } else {
+              this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+          }
+        },
+
+        reset_loading() {
+          this.list = [];
+          this.$nextTick(() => {
+            this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
+          });
+        }
+      },
+    });
+  </script>
+
+  </body>
+</html>
