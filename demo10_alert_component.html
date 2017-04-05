@@ -1,0 +1,99 @@
+<html>
+<head>
+
+<!-- bootstrap 4 -->
+<link rel="stylesheet" href="/css/bootstrap4.min.css">
+ 
+<script src="/js/jquery.js"></script>
+<script src="/js/tether.js"></script>
+<script src="/js/bootstrap.js"></script>
+
+<script src="/js/vue.js"></script>
+
+<style>
+.display_none {
+    display: none !important;
+}
+</style>
+
+</head>
+
+<body>
+<div id="app" class="container">
+
+<p>{{ message }}</p>
+
+<div class="alert alert-warning alert-dismissible fade show">
+<button type="button" data-dismiss="alert" class="close">
+<span>&times;</span>
+</button>
+<strong>Holy guacamole!</strong> You should check in on some of those fields below.
+</div>
+
+<div class="alert alert-warning alert-dismissible fade show">
+<button type="button" data-dismiss="alert" class="close">
+<span>&times;</span>
+</button>
+<strong>Holy guacamole!</strong> You should check in on some of those fields below.
+</div>
+
+<button @click="show_alert(1)">Show 1</button>
+
+
+<alert-msg @tada1_alert="show=true">Tada 1</alert-msg>
+<alert-msg>Tadaa 2</alert-msg>
+<alert-msg>Tadaaa 3</alert-msg>
+
+<p>{{ message }} - Done</p>
+
+</div>
+
+<script>
+
+var alert_component = {
+    data() {
+       return { show: true };
+    },
+    
+    template: `
+<div class="alert alert-warning alert-dismissible fade show" 
+    :class="{display_none: show === false}"
+    >
+<button type="button" class="close" @click="close_and_remove">
+<span>&times;</span>
+</button>
+<slot></slot>
+</div>    
+    `,
+    methods: {
+        close_and_remove() {
+            this.show = false
+        },
+    },
+    watch: {
+        show(new_value) {
+            console.log("show new_value:" + new_value)
+        }
+    }
+};
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!',
+  },
+  methods: {
+    show_alert(alert_id){
+        console.log("called show_alert:" + alert_id)
+        this.$emit("tada1_alert")
+    }
+  },
+  components: {
+    'alert-msg': alert_component,
+  },
+
+})
+</script>
+</body>
+</html>
+
