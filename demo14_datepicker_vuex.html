@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VueJs Tutorial - coligo</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/bootstrap-datepicker.css" />
+</head>
+<body>
+
+<div id="vue-instance">
+
+<datepicker ref="startDate" 
+    updater="setStartDate" 
+    default="1982-12-31">        
+</datepicker>
+
+<datepicker ref="endDate"   
+    updater="setEndDate"   
+    default="2017-12-31">
+</datepicker>
+
+<p>Start date: {{startDate}}</p> 
+<p>End date: {{endDate}}</p> 
+
+<button class="btn btn-primary" @click="clearDates">Clear Dates</button>
+<button class="btn btn-primary" @click="resetStartDate">Reset Start Date</button>
+<button class="btn btn-primary" @click="resetEndDate">Reset End Date</button>
+<button class="btn btn-primary" @click="resetBothDates">Reset Both Dates</button>
+
+</div>
+
+<script src="/js/vue.js"></script>
+<script src="/js/vuex.js"></script>
+
+<!-- could use moment for date formatting -->
+<script src="/js/moment.js"></script>
+
+<!-- jquery is required for bootstrap-datepicker.js -->
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap-datepicker.js"></script>
+
+
+<script>
+
+var date_format = "YYYY-MM-DD";
+
+var store = new Vuex.Store({
+    state: {
+        startDate: '',
+        endDate: '',
+    },
+
+    mutations: {
+
+        setStartDate(state, date_val) {
+            state.startDate = date_val
+        },
+
+        setEndDate(state, date_val) {
+            state.endDate = date_val
+        },
+
+    },
+});
+
+Vue.component('datepicker', {
+
+template: `
+    <div class="input-group date">
+    <input type="text" class="form-control">
+    <span class="input-group-addon">
+        <i class="glyphicon glyphicon-calendar"></i>
+    </span>
+    </div>
+    `,
+
+props: ['updater', 'default'],
+
+mounted: function(){
+
+    //!important, as `this` is not available in the context below
+    var t = this;
+    var dp = $(this.$el.children[0]);
+
+    if(t.default) {
+        // console.log("Setting default date:" + t.default)
+        store.commit(t.updater, t.default)
+        $(this.$el.children[0]).val(t.default)
+    }
+
+    dp.datepicker({
+        format: date_format.toLowerCase(),  
+        autoclose: true
+    }).on('changeDate', function(e) {
+        store.commit(t.updater, moment(e.date).format(date_format))
+    });
+
+    t.$on('reset', function(date_reset) {
+      // console.log('reset called for:' + t.updater + " date:" + date_reset)
+      store.commit(t.updater, date_reset)
+
+      //to set the datepicker (date in textbox + last set valdate)
+      dp.val(date_reset)
+      dp.data({date: date_reset})
+      dp.datepicker('update')
+    });
+
+},
+
+});
+
+
+
+
+var vm = new Vue({
+
+el: '#vue-instance',
+
+computed: {
+
+    startDate() {
+        return store.state.startDate
+    },
+
+    endDate() {
+        return store.state.endDate  
+    },
+
+},
+
+methods: {
+
+    clearDates(){
+
+        this.$refs.startDate.$emit('reset', '')
+        this.$refs.endDate.$emit('reset', '')
+
+    },
+
+    resetStartDate(){
+
+        this.$refs.startDate.$emit('reset', '2016-01-01')
+
+    },
+
+    resetEndDate(){
+
+        this.$refs.endDate.$emit('reset', '1982-12-31')
+
+    },
+
+    resetBothDates() {
+
+        this.$refs.startDate.$emit('reset', moment().format(date_format))
+        this.$refs.endDate.$emit('reset', moment().add(3, 'months').format(date_format))
+
+    },
+
+},
+
+});
+
+</script>
+
+</body>
+</html>
