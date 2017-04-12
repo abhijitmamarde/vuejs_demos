@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VueJs Tutorial - coligo</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/bootstrap-datepicker.css" />
+</head>
+<body>
+
+<div id="vue-instance">
+
+<datepicker value="31-12-2016" update_var="startDate"></datepicker>
+<datepicker value="" update_var="endDate"></datepicker>
+
+
+<p>Start date: {{startDate}}</p> 
+<p>End date: {{endDate}}</p> 
+
+</div>
+
+<script src="/js/vue.js"></script>
+
+<!-- could use moment for date formatting -->
+<!-- <script src="/js/moment.js"></script> -->
+
+<!-- jquery is required for bootstrap-datepicker.js -->
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap-datepicker.js"></script>
+
+
+<script>
+
+Vue.component('datepicker', {
+template: `
+    <div class="input-group date">
+    <input type="text" class="form-control" :value="value">
+    <span class="input-group-addon">
+        <i class="glyphicon glyphicon-calendar"></i>
+    </span>
+    </div>
+    `,
+props: ['value', 'update_var'],
+mounted: function(){
+    // console.log("in child comp")
+    // console.log($(this.$el.children[0]));
+    var t = this;  //!important, as `this` is not available in the context below
+    if (t.value) {
+        //@TODO::setting the startdate with the value passed - **not working**
+        console.log("calling initial set date for:" + t.update_var);
+        t.$emit('dateChange', t.update_var, t.value);
+    }
+
+    $(this.$el.children[0]).datepicker({
+      format: 'dd-mm-yyyy',
+      autoclose: true
+    }).on('changeDate', function(e) {
+        // `e` here contains the extra attributes
+        // console.log('on changeDate event');
+        // console.log(e);
+        
+        //could use the momentjs for formatting date to different format
+        // selectedDate = moment(e.date).format('DD-MM-YYYY');
+        t.$root.$emit('dateChange', t.update_var, this.value);
+    });
+},
+
+});
+
+
+var vm = new Vue({
+el: '#vue-instance',
+data: {
+    startDate: '',
+    endDate: ''
+},
+mounted: function() {
+    this.$on('dateChange', function (update_date, date_changed) {
+      // console.log('inside onDateChanged, update_date=' + update_date + ' date_changed=' + date_changed)
+      if (update_date == 'startDate') {
+        this.startDate = date_changed;
+      } else if (update_date == 'endDate') {
+        this.endDate = date_changed;
+      }
+
+    })
+},
+
+});
+</script>
+
+</body>
+</html>
