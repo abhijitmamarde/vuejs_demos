@@ -109,7 +109,23 @@ var vm = new Vue({
       { path: '/user/:username/comment/:comment_id', component: CommentComponent },
     ]
 
-  })
+  }),
+
+  watch: {
+
+    // when can watch for route changes
+    '$route'(new_route, old_route) {
+
+      console.log("Route changed from old_route and new_route are:")
+      console.log(old_route)
+      console.log(new_route)
+
+      // route object:
+      
+
+
+    }
+  }
 
 })
 
