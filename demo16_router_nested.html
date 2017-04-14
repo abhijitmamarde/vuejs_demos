@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VueJs Tutorial</title>
+  </head>
+<body>
+
+<pre>
+
+Nested router demo
+
+/user/foo/profile                     /user/foo/posts
++------------------+                  +-----------------+
+| User             |                  | User            |
+| +--------------+ |                  | +-------------+ |
+| | Profile      | |  +------------>  | | Posts       | |
+| |              | |                  | |             | |
+| +--------------+ |                  | +-------------+ |
++------------------+                  +-----------------+
+
+
+- user is top level router, inside it Profile and Posts are nested routes
+
+</pre>
+
+<div id="vue-instance">
+
+<ul>
+
+<li><router-link to="/user/abhi/profile">Go to User 1 Profile</router-link></li>
+<li><router-link to="/user/abhi/posts">Go to User 1 Posts</router-link></li>
+
+<li><router-link to="/user/vishal/profile">Go to User 2 Profile</router-link></li>
+<li><router-link to="/user/vishal/posts">Go to User 2 Posts</router-link></li>
+
+</ul>
+
+<router-view> the router would be rendered here! </router-view>
+
+</div>
+
+<script src="/js/vue.js"></script>
+<script src="/js/vue-router.js"></script>
+
+<script>
+
+// Top level user route component
+const UserComponent = { 
+
+  template: `
+  <div> 
+    <p>This is user: {{ $route.params.username }}</p>
+    <button @click="onClick"> Click Me </button>
+    <hr>
+    <!-- nested routes starts here! -->
+    <router-view></router-view>
+  </div>
+  `,
+
+  methods: {
+    
+    onClick() {
+
+      console.log("Clicked")
+      console.log("username=" + this.$route.params.username)
+
+    },
+
+  }
+}
+
+
+const UserProfileComponent = {
+  template: `
+  <p> this is user profile content </p>
+  `
+}
+
+const UserPostsComponent = {
+  template: `
+  <p> this is user posts content </p>
+  `
+}
+
+const UserHomeComponent = {
+  template: `
+  <p> this is user's home content </p>
+  `
+}
+
+
+var vm = new Vue({
+
+  el: '#vue-instance',
+
+  router: new VueRouter({
+
+    routes: [
+      { 
+        path: '/user/:username', 
+        component: UserComponent,
+
+        children: [
+          {
+            path: 'profile',
+            component: UserProfileComponent
+          },
+          {
+            path: 'posts',
+            component: UserPostsComponent
+          },
+          {
+            path: '',
+            component: UserHomeComponent
+          }
+        ]
+      }
+    ]
+
+  }),
+
+  watch: {
+
+    // when can watch for route changes
+    '$route'(new_route, old_route) {
+
+      console.log("Route changed from old_route and new_route are:")
+      console.log(old_route)
+      console.log(new_route)
+    }
+  }
+
+})
+
+</script>
+
+</body>
+</html>
