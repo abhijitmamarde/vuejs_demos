@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VueJs Tutorial</title>
+  </head>
+<body>
+
+<div id="vue-instance">
+<ul>
+
+<li><router-link to="/foo">Go to Foo</router-link></li>
+<li><router-link to="/bar">Go to Bar</router-link></li>
+
+<li><router-link to="/user/abhi">Go to User 1</router-link></li>
+<li><router-link to="/user/vishal">Go to User 2</router-link></li>
+
+<li><router-link to="/user/abhi">Go to User 1</router-link></li>
+<li><router-link to="/user/vishal">Go to User 2</router-link></li>
+
+<li><router-link to="/user/abhi/comment/1">Go to Comment 1 from User 1</router-link></li>
+<li><router-link to="/user/abhi/comment/2">Go to Comment 2 from User 1</router-link></li>
+
+<li><router-link to="/user/vishal/comment/1">Go to User 2 from User 2</router-link></li>
+<li><router-link to="/user/vishal/comment/2">Go to User 2 from User 2</router-link></li>
+
+</ul>
+
+<router-view> the router would be rendered here! </router-view>
+
+</div>
+
+<script src="/js/vue.js"></script>
+<script src="/js/vue-router.js"></script>
+
+<script>
+
+// Steps:
+//
+// 1. Create component for different router-path
+// 2. Inside vue app, initialize `router` with `VueRouter` instance
+// 3. Inside `router` i.e. , define `routes` with list of router-paths, mapped with the components
+
+const FooComponent = { template: '<div>foo</div>' }
+const BarComponent = { template: '<div>bar</div>' }
+
+
+// Dynamic params passed/matched to route are available in component via:
+// `$route.params` OR `this.$route.params`
+const UserComponent = { 
+
+  template: `
+  <div> 
+    <p>This is user: {{ $route.params.username }}</p>
+    <button @click="onClick"> Click Me </button>
+  </div>
+  `,
+
+  methods: {
+    
+    onClick() {
+
+      console.log("Clicked")
+      console.log("username=" + this.$route.params.username)
+
+    },
+
+  }
+}
+
+
+const CommentComponent = { 
+
+  template: `
+  <div> 
+    <p>This is comment id: {{ $route.params.comment_id }} added by user: {{ $route.params.username }}</p>
+    <button @click="onClick"> Click Me </button>
+  </div>
+  `,
+
+  methods: {
+    
+    onClick() {
+
+      console.log("Clicked")
+      console.log("username: " + this.$route.params.username)
+      console.log("comment id: " + this.$route.params.comment_id)
+
+    },
+
+  }
+}
+
+
+var vm = new Vue({
+
+  el: '#vue-instance',
+
+  router: new VueRouter({
+
+    routes: [
+      { path: '/foo', component: FooComponent },
+      { path: '/bar', component: BarComponent },
+
+      // Route with dynamic params!
+      { path: '/user/:username', component: UserComponent },
+
+      // another example with dynamic params
+      // here both the username and comment_id are params!
+      { path: '/user/:username/comment/:comment_id', component: CommentComponent },
+    ]
+
+  })
+
+})
+
+</script>
+
+</body>
+</html>
