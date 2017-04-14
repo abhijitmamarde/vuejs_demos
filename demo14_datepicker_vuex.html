@@ -85,7 +85,7 @@ mounted: function(){
     if(t.default) {
         // console.log("Setting default date:" + t.default)
         store.commit(t.updater, t.default)
-        $(this.$el.children[0]).val(t.default)
+        dp.val(t.default)
     }
 
     dp.datepicker({
