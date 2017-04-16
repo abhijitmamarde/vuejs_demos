@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VueJs Tutorial</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/sweetalert2.css">
+  </head>
+<body>
+
+<div id="vue-instance">
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Vue-Dropdown Demo</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li :class="{active: page == 'profile'}" @click="page = 'profile'"><a>Profile</a></li>
+        <li :class="{active: page == 'posts'}" @click="page = 'posts'"><a>Posts</a></li>
+
+        <dropdown name="Change User">
+          <dropdown-item name="User 1" @clicked="user = 'user1'"></dropdown-item>
+          <dropdown-item name="User 2" @clicked="user = 'user2'"></dropdown-item>
+          <dropdown-item name="User 3" @clicked="user = 'user3'"></dropdown-item>
+          <dropdown-sep></dropdown-sep>
+          <dropdown-item name="Admin" @clicked="user = 'admin'"></dropdown-item>
+          <dropdown-sep></dropdown-sep> 
+          <dropdown-item name="Abhijit" @clicked="user = 'abhi'"></dropdown-item>
+        </dropdown>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+          <dropdown :name="user">
+            <dropdown-item v-if="user != 'Guest'" name="Log Out" @clicked="logout"></dropdown-item>
+            <dropdown-item name="Another Action"></dropdown-item>
+            <dropdown-item name="Something else here"></dropdown-item>
+            <dropdown-sep></dropdown-sep>
+            <dropdown-item name="Separated link"></dropdown-item>
+          </dropdown>
+      </ul>
+      
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<router-view> the router would be rendered here! </router-view>
+
+</div>
+  
+<!-- 
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap3.js"></script> 
+-->
+
+<script src="/js/vue.js"></script>
+<script src="/js/vue-router.js"></script>
+<script src="/js/vue-clickaway.js"></script>
+<script src="/js/vue-dropdown.js"></script>
+
+<script src="/js/sweetalert2.js"></script>
+
+<script>
+
+var g_user = 'Guest'
+
+if(localStorage.user) {
+  g_user = localStorage.user
+}
+
+const UserComponent = {
+  template: `
+  <div> 
+    <p>This is user: {{ $route.params.username }}</p>
+    <button @click="show_modal"> Click Me </button>
+    <hr>
+    <!-- nested routes starts here! -->
+    <router-view></router-view>
+  </div>
+  `,
+
+  methods: {
+    show_modal() {
+      swal('showing modal for user: ' + this.$route.params.username)
+    },
+  },
+
+}
+
+const ProfileComponent = {
+  template: `
+  <div>
+  <p> this is page content for user profile </p>
+  <p> User: {{ $route.params.username }} </p>
+  </div>
+  `
+}
+
+const PostsComponent = {
+  template: `
+  <div>
+  <p> this is page content for user posts </p>
+  <p> User: {{ $route.params.username }} </p>
+  </div>
+  `
+}
+
+
+var vm = new Vue({
+
+  el: '#vue-instance',
+
+  data: {
+    page: '',
+    user: g_user,
+  },
+
+  router: new VueRouter({
+
+    routes: [
+      { 
+        name: 'user',
+        path: '/user/:username', 
+        component: UserComponent,
+
+        children: [
+        {
+          name: 'user_profile',
+          path: 'profile',
+          component: ProfileComponent
+        },
+        { 
+          name: 'user_posts',
+          path: 'posts', 
+          component: PostsComponent
+        },
+        ]
+      }
+    ]
+
+  }),
+
+  methods: {
+
+    logout() {
+      localStorage.user = 'Guest'
+      this.user = localStorage.user
+    },
+
+  },
+
+  watch: {
+    page(n, o) {
+      if(this.user != "Guest") {
+        this.$router.push('/user/' + this.user + '/' + this.page)
+      }
+    },
+
+    user(n, o) {
+      localStorage.user = n
+      if(this.user != "Guest") {
+        this.$router.push('/user/' + this.user + '/' + this.page)
+      }
+    },
+  },
+
+  mounted: function() {
+    if(this.user != "Guest") {
+      this.$router.push('/user/' + this.user + '/' + this.page)
+    }
+  }
+
+})
+
+</script>
+
+</body>
+</html>
