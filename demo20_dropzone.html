@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>VueJS Dropzone demo</title>
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/vue-dropzone.css" />
+
+</head>
+<body>
+
+<div id="vue-instance">
+
+    <dropzone id="myVueDropzone" url="https://httpbin.org/post" v-on:vdropzone-success="showSuccess" max-number-of-files=1 style="width: 300px;"></dropzone>
+
+</div>
+
+<script src="/js/dropzone.js"></script>
+<script src="/js/vue.js"></script>
+<script src="/js/vue-dropzone.js"></script>
+
+<script>
+
+Vue.component('dropzone', MyDropzoneComponent);
+
+var vm = new Vue({
+
+el: '#vue-instance',
+
+data: {
+},
+
+methods: {
+    showSuccess() {
+        console.log("success uploading the file!")
+    }
+},
+
+});
+</script>
+
+
+</body>
+</html>
